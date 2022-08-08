@@ -3,6 +3,7 @@ import {FILTER_ALL} from '../../services/filter';
 import {MODE_CREATE, MODE_NONE} from '../../services/mode';
 import {objectWithOnly, wrapChildrenWith} from '../../util/common';
 import {getAll, addToList, updateStatus} from '../../services/todo';
+import { addToDo, getAllToDo } from '../../services/api';
 
 class StateProvider extends Component {
     constructor() {
@@ -11,8 +12,31 @@ class StateProvider extends Component {
             query: '',
             mode: MODE_CREATE,
             filter: FILTER_ALL,
-            list: getAll()
+            list:  []
         }
+
+    }
+
+
+    componentDidMount(){
+
+        const data =  getAllToDo().then(value=> this.setState({list: value}))
+        // console.log("Response2=>",data);
+       // this.setState({list: getAllToDo()});
+
+    //     fetch('https://hgg7a930zi.execute-api.us-east-2.amazonaws.com/Stage/todos',{
+    //     Method: 'GET',
+    //     Headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //   })
+    // .then(res => res.json())
+    // .then((data) => {
+    //     console.log(data.Items)
+    //     this.setState({list: data.Items});
+    // })
+    // .catch(console.log);
+
     }
 
     render() {
@@ -25,9 +49,15 @@ class StateProvider extends Component {
     }
 
     addNew(text) {
-        let updatedList = addToList(this.state.list, {text, completed: false});
 
-        this.setState({list: updatedList});
+        addToDo(text)
+
+        // let updatedList = addToList(this.state.list, {text, completed: false});
+
+        // let updatedList = getAllToDo().then(values => values)
+
+
+        getAllToDo().then(value=> this.setState({list: value}))
     }
 
     changeFilter(filter) {
